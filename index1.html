@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir un thème</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-screen">
+        <h1>Memory Game</h1>
+        <h2>Choisissez un thème :</h2>
+        <button id="theme-animals">Animaux</button>
+        <button id="theme-nature">Nature</button>
+        <button id="theme-objects">Objets</button>
+    </div>
+    <script>
+        const themeButtons = document.querySelectorAll('button[id^="theme"]');
+
+        themeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                localStorage.setItem('theme', button.id.split('-')[1]);
+                window.location.href = 'index2.html'; // Redirection immédiate
+            });
+        });
+    </script>
+</body>
+</html>

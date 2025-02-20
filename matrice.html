@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir la taille de la matrice</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-screen">
+        <h1>Memory Game</h1>
+        <h2>Choisissez la taille de la matrice :</h2>
+        <button id="matrix-4x4">4x4 (Facile)</button>
+         <button id="matrix-5x4">5x4 (Intermédiaire)</button>
+           <button id="matrix-6x5">6x5 (Difficile)</button>
+    </div>
+    <script>
+        const matrixButtons = document.querySelectorAll('button[id^="matrix"]');
+
+        matrixButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Stocker la taille sélectionnée
+                localStorage.setItem('matrixSize', button.id.split('-')[1]);
+                // Rediriger vers la page du plateau de jeu
+                window.location.href = 'game.html';
+            });
+        });
+    </script>
+</body>
+</html>

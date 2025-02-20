@@ -1,0 +1,190 @@
+/* Style global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* Fond clair pour un effet aéré */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    background: linear-gradient(135deg, #0077b6, #00b4d8); /* Gradient bleu doux */
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Animation d'apparition du body */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #ffffff; /* Blanc pour le titre */
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Ombre portée sur le titre */
+    animation: slideDown 1s ease-out;
+}
+
+/* Animation du titre */
+@keyframes slideDown {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Style des boutons généraux */
+button {
+    padding: 10px 20px;
+    background-color: #0077b6; /* Bleu profond */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #005f99; /* Bleu plus sombre */
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Style des boutons "Suivant" */
+.next-btn {
+    background-color: #28a745; /* Vert pour le bouton suivant */
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1);
+}
+
+.next-btn:hover {
+    background-color: #218838; /* Vert plus sombre */
+    transform: scale(1.1); /* Agrandissement au survol */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.next-btn:active {
+    background-color: #1e7e34; /* Vert foncé lors du clic */
+    transform: scale(1); /* Effet d'agrandissement au clic */
+}
+
+/* Page index.html (choix des joueurs) */
+.choose-player, .choose-theme, .choose-difficulty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Page index3.html (jeu principal) */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Conteneur des cartes */
+.game-container {
+    display: grid;
+    gap: 10px;
+    width: 90vw;
+    max-width: 800px; /* Ajuste selon tes besoins */
+    margin-top: 20px;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 90px;
+    background-color: #0077b6; /* Bleu profond */
+    border-radius: 10px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.3s ease;
+    animation: cardAppear 0.5s ease-out; /* Animation de l'apparition des cartes */
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation d'apparition des cartes */
+@keyframes cardAppear {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.card.flip {
+    transform: rotateY(180deg);
+    background-color: #caf0f8; /* Bleu clair pour la face retournée */
+}
+
+/* Effet sur l'image des cartes */
+.card img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    transition: transform 0.5s;
+}
+
+.card img:last-child {
+    transform: rotateY(180deg);
+}
+
+/* Bouton de redémarrage */
+#restart-btn {
+    margin-top: 20px;
+    background-color: #0077b6; /* Bleu profond */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#restart-btn:hover {
+    background-color: #005f99; /* Bleu plus sombre */
+    transform: scale(1.05);
+}
+
+/* Affichage du timer */
+#timer {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+    color: #333;
+    animation: fadeIn 1.5s ease-out;
+}
+
+/* Animation du gagnant */
+.winner-animation {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00ff44; /* Couleur vive */
+    animation: glow 2s infinite, zoomIn 0.5s ease-in-out;
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 5px #FFD700, 0 0 10px #FFA500; }
+    50% { text-shadow: 0 0 20px #FF4500, 0 0 30px #FF6347; }
+    100% { text-shadow: 0 0 5px #FFD700, 0 0 10px #FFA500; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

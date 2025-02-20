@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir le mode de jeu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="menu-screen">
+        <h1>Memory Game</h1>
+        <h2>Choisissez le mode de jeu :</h2>
+        <button id="single-player-btn">Jouer en Solo</button>
+        <button id="two-player-btn">Jouer en Duo</button>
+    </div>
+    <script>
+        const singlePlayerBtn = document.getElementById('single-player-btn');
+        const twoPlayerBtn = document.getElementById('two-player-btn');
+
+        singlePlayerBtn.addEventListener('click', () => {
+            localStorage.setItem('gameMode', 'solo');
+            window.location.href = 'index1.html';
+        });
+
+        twoPlayerBtn.addEventListener('click', () => {
+            localStorage.setItem('gameMode', 'duo');
+            window.location.href = 'index1.html';
+        });
+    </script>
+</body>
+</html>

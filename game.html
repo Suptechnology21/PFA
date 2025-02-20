@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game - Plateau de jeu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="game-screen">
+        <h1>Memory Game</h1>
+
+        <!-- Conteneur pour les scores des joueurs -->
+        <div class="score-container">
+            <div id="player1-score" class="active">
+                <p>Player 1: <span id="score-player1">0</span></p>
+            </div>
+            <!-- Player 2 score will be hidden in solo mode -->
+            <div id="player2-score" class="hidden">
+                <p>Player 2: <span id="score-player2">0</span></p>
+            </div>
+        </div>
+
+        <!-- Affichage du chronomètre -->
+        <p id="timer">0:00</p>  <!-- Chronomètre -->
+
+        <!-- Conteneur pour les cartes -->
+        <div class="game-container"></div>
+
+        <!-- Affichage du gagnant -->
+        <p id="winner" class="hidden" aria-live="polite"></p> 
+
+        <!-- Bouton pour redémarrer -->
+        <button id="restart-btn" aria-label="Redémarrer le jeu">Restart</button>
+    </section>
+    
+    <script src="script.js"></script>
+</body>
+</html>
