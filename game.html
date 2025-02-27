@@ -3,36 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Game - Plateau de jeu</title>
+    <title>Memory Game - Challenge Your Brain</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <section class="game-screen">
-        <h1>Memory Game</h1>
-
-        <!-- Conteneur pour les scores des joueurs -->
-        <div class="score-container">
-            <div id="player1-score" class="active">
-                <p>Player 1: <span id="score-player1">0</span></p>
+    <!-- Main game wrapper -->
+    <div class="game-wrapper">
+        <h1>Memory Game <i class="fas fa-brain"></i></h1>
+        
+        <section class="game-screen">
+            <!-- Player mode selection (will be shown at start) -->
+        
+            
+            <!-- Score container with improved styling -->
+            <div class="score-container">
+                <div id="player1-score" class="active">
+                    <i class="fas fa-user"></i>
+                    <p>Player 1: <span id="score-player1">0</span></p>
+                </div>
+                
+                <div id="player2-score" class="hidden">
+                    <i class="fas fa-user"></i>
+                    <p>Player 2: <span id="score-player2">0</span></p>
+                </div>
             </div>
-            <!-- Player 2 score will be hidden in solo mode -->
-            <div id="player2-score" class="hidden">
-                <p>Player 2: <span id="score-player2">0</span></p>
+            
+            <!-- Game info display -->
+            <div class="game-info">
+                <!-- Timer with icon -->
+                <div class="timer-container">
+                    <i class="fas fa-clock"></i>
+                    <p id="timer">0:00</p>
+                </div>
+                
+                <!-- Move counter -->
+                <div class="moves-container">
+                    <i class="fas fa-sync-alt"></i>
+                    <p>Moves: <span id="moves-count">0</span></p>
+                </div>
             </div>
-        </div>
-
-        <!-- Affichage du chronomètre -->
-        <p id="timer">0:00</p>  <!-- Chronomètre -->
-
-        <!-- Conteneur pour les cartes -->
-        <div class="game-container"></div>
-
-        <!-- Affichage du gagnant -->
-        <p id="winner" class="hidden" aria-live="polite"></p> 
-
-        <!-- Bouton pour redémarrer -->
-        <button id="restart-btn" aria-label="Redémarrer le jeu">Restart</button>
-    </section>
+            
+            <!-- Turn indicator for multiplayer -->
+            <p id="turn-indicator" class="hidden">
+                <span id="current-player">Player 1</span>'s turn
+            </p>
+            
+            <!-- Game grid container -->
+            <div class="game-container"></div>
+            
+            <!-- Winner announcement with animation -->
+            <div id="winner-panel" class="hidden">
+                <div class="winner-content">
+                    <h2 class="winner-title">Congratulations!</h2>
+                    <p id="winner" class="winner-animation"></p>
+                    <div class="winner-stats">
+                        <p>Time: <span id="final-time">0:00</span></p>
+                        <p>Moves: <span id="final-moves">0</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game controls -->
+            <div class="game-controls">
+                <button id="restart-btn" aria-label="Redémarrer le jeu">
+                    <i class="fas fa-redo"></i> Restart
+                </button>
+                <button id="new-game-btn" class="next-btn">
+                    <i class="fas fa-play"></i> New Game
+                </button>
+            </div>
+        </section>
+    </div>
     
     <script src="script.js"></script>
 </body>
