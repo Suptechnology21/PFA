@@ -3,28 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choisir la taille de la matrice</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Memory Game - Sélection de la Matrice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1A5F7A;
+            --secondary-color: #159895;
+            --accent-color: #57C5B6;
+            --background-color: #F8F9FA;
+            --text-color: #2C3333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(26, 95, 122, 0.1);
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            z-index: -1;
+            opacity: 0.1;
+            border-radius: 22px;
+            transition: all 0.4s ease;
+        }
+
+        .container:hover::before {
+            opacity: 0.2;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .matrix-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .matrix-btn {
+            padding: 15px;
+            border: 2px solid var(--primary-color);
+            background-color: transparent;
+            color: var(--primary-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(26, 95, 122, 0.1), transparent);
+            transition: 0.4s;
+        }
+
+        .matrix-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%) scale(0);
+            transition: all 0.3s ease;
+            opacity: 0;
+            font-size: 1.5rem;
+        }
+
+        #matrix-4x4::after { content: '🧩'; }
+        #matrix-5x4::after { content: '📊'; }
+        #matrix-6x5::after { content: '🔢'; }
+
+        .matrix-btn:hover::before {
+            left: 100%;
+        }
+
+        .matrix-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(26, 95, 122, 0.2);
+        }
+
+        .matrix-btn:hover::after,
+        .matrix-btn.selected::after {
+            transform: translateY(-50%) scale(1.5);
+            opacity: 1;
+        }
+
+        .matrix-description {
+            margin-top: 20px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 30px 20px;
+            }
+        }
+
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #E0F2F1, #B2DFDB);
+            opacity: 0.3;
+            animation: backgroundShift 10s infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(45deg, rgba(26, 95, 122, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(26, 95, 122, 0.05) 25%, transparent 25%);
+            background-size: 50px 50px;
+            opacity: 0.5;
+            animation: patternMove 20s linear infinite;
+        }
+
+        @keyframes patternMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-toggle {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-toggle:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
 </head>
 <body>
-    <div class="menu-screen">
-        <h1>Memory Game</h1>
-        <h2>Choisissez la taille de la matrice :</h2>
-        <button id="matrix-4x4">4x4 (Facile)</button>
-         <button id="matrix-5x4">5x4 (Intermédiaire)</button>
-           <button id="matrix-6x5">6x5 (Difficile)</button>
+    <div class="animated-background"></div>
+    <div class="background-pattern"></div>
+
+    <div class="container">
+        <div class="logo">Memory Game</div>
+        
+        <div class="matrix-selection">
+            <button id="matrix-4x4" class="matrix-btn">4x4 (Facile)</button>
+            <button id="matrix-5x4" class="matrix-btn">5x4 (Intermédiaire)</button>
+            <button id="matrix-6x5" class="matrix-btn">6x5 (Difficile)</button>
+        </div>
+        
+        <div class="matrix-description">
+            Sélectionnez la taille de votre matrice
+        </div>
     </div>
+
+    <div class="music-controls">
+        <button id="musicToggle" class="music-toggle">🎵</button>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="sounds/background.mp3" type="audio/mpeg">
+        Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
     <script>
-        const matrixButtons = document.querySelectorAll('button[id^="matrix"]');
+        const matrixButtons = document.querySelectorAll('.matrix-btn');
+        const description = document.querySelector('.matrix-description');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isMusicPlaying = false;
+
+        function handleMatrixSelection(matrixSize) {
+            // Remove 'selected' class from all buttons
+            matrixButtons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add 'selected' class to clicked button
+            event.target.classList.add('selected');
+            
+            localStorage.setItem('matrixSize', matrixSize);
+            description.textContent = `Matrice ${matrixSize} sélectionnée...`;
+            description.style.color = 'var(--accent-color)';
+            
+            setTimeout(() => {
+                window.location.href = 'game.html';
+            }, 500);
+        }
 
         matrixButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Stocker la taille sélectionnée
-                localStorage.setItem('matrixSize', button.id.split('-')[1]);
-                // Rediriger vers la page du plateau de jeu
-                window.location.href = 'game.html';
+                handleMatrixSelection(button.id.split('-')[1]);
+            });
+
+            button.addEventListener('mouseenter', () => {
+                description.style.opacity = '1';
+                description.style.transform = 'translateY(-5px)';
+            });
+
+            button.addEventListener('mouseleave', () => {
+                description.style.opacity = '0.7';
+                description.style.transform = 'translateY(0)';
             });
         });
+
+        function playMusic() {
+            backgroundMusic.volume = 0.3;
+            backgroundMusic.play().catch(error => {
+                console.log('Lecture automatique bloquée', error);
+                musicToggle.textContent = '🔇';
+            });
+            musicToggle.textContent = '🎵';
+            isMusicPlaying = true;
+        }
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                musicToggle.textContent = '🔇';
+                isMusicPlaying = false;
+            } else {
+                playMusic();
+            }
+        }
+
+        // Essai de lecture dès que possible
+        window.addEventListener('load', () => {
+            playMusic();
+        });
+
+        musicToggle.addEventListener('click', toggleMusic);
     </script>
 </body>
 </html>

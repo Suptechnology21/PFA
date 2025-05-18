@@ -5,6 +5,13 @@ const themes = {
     objects: ['phone', 'laptop', 'book', 'pen', 'watch', 'chair']
 };
 
+// Sons pour le jeu
+const flipSound = new Audio('sounds/flip.mp3');
+const matchSound = new Audio('sounds/match.mp3');
+const mismatchSound = new Audio('sounds/miss.mp3');
+const backgroundMusic = new Audio('sounds/background.mp3'); // Nouveau son de fond
+backgroundMusic.loop = true; // Répéter la musique en boucle
+
 // Variables globales
 const images = [];
 let shuffledCards = [];
@@ -13,6 +20,8 @@ let difficulty = 'easy'; // Par défaut, facile
 let matrixSize = localStorage.getItem('matrixSize') || '4x4'; // Taille de la matrice
 let timerInterval;
 let startTime;
+let isMusicPlaying = false;
+const musicToggle = document.getElementById('sound-btn');
 
 // Temps limite en fonction de la difficulté (en secondes)
 const difficultyTimes = {
@@ -48,16 +57,66 @@ let moves = 0;
 
 // Récupérer les préférences depuis le localStorage
 document.addEventListener('DOMContentLoaded', initGame);
+function tryAutoPlayMusic() {
+    backgroundMusic.volume = 0.3; // Volume à 30%
+    const playPromise = backgroundMusic.play();
+    
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            isMusicPlaying = true;
+            updateMusicIcon();
+        }).catch(error => {
+            console.log('Lecture automatique bloquée', error);
+            isMusicPlaying = false;
+            updateMusicIcon();
+        });
+    }
+}
+function updateMusicIcon() {
+    const soundIcon = document.getElementById('sound-icon');
+    if (isMusicPlaying) {
+        soundIcon.classList.remove('fa-volume-mute');
+        soundIcon.classList.add('fa-volume-up');
+    } else {
+        soundIcon.classList.remove('fa-volume-up');
+        soundIcon.classList.add('fa-volume-mute');
+    }
+}
 
+// Modifiez votre écouteur d'événement de son existant
+musicToggle.addEventListener('click', () => {
+    if (isMusicPlaying) {
+        // Arrêter la musique
+        backgroundMusic.pause();
+        isMusicPlaying = false;
+    } else {
+        // Essayer de jouer la musique
+        tryAutoPlayMusic();
+    }
+    updateMusicIcon();
+});
 function initGame() {
     isSoloMode = localStorage.getItem('gameMode') === 'solo';
     const selectedTheme = localStorage.getItem('theme') || 'animals';
     difficulty = localStorage.getItem('difficulty') || 'easy';
 
+    // Modification ici pour générer plus d'images si nécessaire
     if (themes[selectedTheme]) {
         images.length = 0; // Videz le tableau images
-        images.push(...themes[selectedTheme], ...themes[selectedTheme]);
-        shuffledCards = images.sort(() => Math.random() - 0.5);
+        const themeImages = themes[selectedTheme];
+        
+        // Calculer combien de paires sont nécessaires pour la matrice
+        const [rows, cols] = matrixSize.split('x').map(Number);
+        const totalCards = rows * cols;
+        const pairsNeeded = totalCards / 2;
+        
+        // Répéter les images suffisamment de fois pour avoir assez de paires
+        while (images.length < totalCards) {
+            images.push(...themeImages);
+        }
+        
+        // Tronquer au nombre exact de cartes nécessaires
+        shuffledCards = images.slice(0, totalCards).sort(() => Math.random() - 0.5);
     }
 
     if (isSoloMode) {
@@ -104,6 +163,32 @@ function startGame() {
     startTimer(); // Démarre le chronomètre
     moves = 0;
     updateMoves();
+    toggleActivePlayer();
+
+    
+    // Démarrer la musique de fond
+    backgroundMusic.play().catch(error => {
+        console.log('Erreur lors de la lecture de la musique de fond:', error);
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // Vos initialisations existantes...
+    
+    // Ajouter une vérification de la lecture automatique
+    if (localStorage.getItem('musicEnabled') !== 'false') {
+        tryAutoPlayMusic();
+    }
+});
+
+// Modification de la fonction de volume
+function setBackgroundMusicVolume(volume) {
+    backgroundMusic.volume = volume;
+    if (volume > 0) {
+        isMusicPlaying = true;
+    } else {
+        isMusicPlaying = false;
+    }
+    updateMusicIcon();
 }
 
 function resetGame() {
@@ -123,20 +208,23 @@ function resetGame() {
     gameContainer.style.pointerEvents = 'auto';
     gameContainer.innerHTML = '';
     createCards();
+    
+    // Arrêter et redémarrer la musique de fond
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
 }
 
 function createCards() {
     const fragment = document.createDocumentFragment();
     const [rows, cols] = matrixSize.split('x').map(Number); // Récupère les dimensions de la matrice
     const totalCards = rows * cols;
-
-    // Sélectionne un sous-ensemble d'images en fonction du nombre de cartes nécessaires
-    const selectedImages = shuffledCards.slice(0, totalCards / 2);
-    const pairedImages = [...selectedImages, ...selectedImages]; // Duplique les images pour les paires
-    const shuffledPairedImages = pairedImages.sort(() => Math.random() - 0.5); // Mélange les cartes
+    
+    // Modification ici : nous utilisons directement shuffledCards qui est déjà configuré 
+    // dans initGame() pour avoir le bon nombre de cartes
+    const gameDeck = [...shuffledCards];
     
     // Crée les cartes avec la structure front/back
-    shuffledPairedImages.forEach(image => {
+    gameDeck.forEach(image => {
         const card = document.createElement('div');
         card.classList.add('card');
         
@@ -195,6 +283,9 @@ function adjustCardSize(rows, cols) {
 function flipCard(card) {
     if (card.classList.contains('flip') || isFlipping || secondCard || card === firstCard || isGameOver) return;
 
+    // Jouer le son de flip
+    flipSound.play();
+
     card.classList.add('flip');
     
     // Incrémenter le compteur de mouvements
@@ -221,6 +312,9 @@ function checkMatch() {
 }
 
 function handleMatch() {
+    // Jouer le son de match
+    matchSound.play();
+
     firstCard.classList.add('matched');
     secondCard.classList.add('matched');
     
@@ -237,19 +331,36 @@ function handleMatch() {
 }
 
 function handleMismatch() {
+    // Désactiver temporairement les clics
+    gameContainer.style.pointerEvents = 'none';
+    
+    // Créer une nouvelle instance du son pour chaque mismatch
+    // Cela évite les problèmes quand les sons se chevauchent
+    const mismatchSoundInstance = new Audio('sounds/miss.mp3');
+    mismatchSoundInstance.volume = mismatchSound.volume; // Conserver le même volume
+    
+    setTimeout(() => {
+        // Jouer le son de différence avec la nouvelle instance
+        mismatchSoundInstance.play().catch(error => {
+            console.log('Erreur lors de la lecture du son de mismatch:', error);
+        });
+    }, 400); // Délai de 400 millisecondes après le retournement des cartes
+
     setTimeout(() => {
         firstCard.classList.remove('flip');
         secondCard.classList.remove('flip');
         resetCards();
         isFlipping = false;
 
+        // Réactiver les clics
+        gameContainer.style.pointerEvents = 'auto';
+
         if (!isSoloMode) {
             currentPlayer = currentPlayer === 1 ? 2 : 1;
             toggleActivePlayer();
         }
-    }, 1000);
+    }, 1000); // Même durée qu'avant
 }
-
 function resetCards() {
     firstCard = null;
     secondCard = null;
@@ -257,6 +368,7 @@ function resetCards() {
 
 function displayWinner() {
     stopTimer(); // Arrête le chronomètre à la fin du jeu
+    backgroundMusic.pause(); // Arrêter la musique de fond
     isGameOver = true;
     
     const elapsedTime = Math.floor((Date.now() - startTime) / 1000); // Temps écoulé en secondes
@@ -334,6 +446,7 @@ function updateTimer() {
 
 function stopTimer() {
     clearInterval(timerInterval); // Arrête l'intervalle
+    backgroundMusic.pause(); // Arrêter la musique de fond
 }
 
 function resetTimer() {
@@ -346,6 +459,7 @@ function resetTimer() {
 // Affichage du message "temps écoulé"
 function displayTimeUpMessage() {
     isGameOver = true;
+    backgroundMusic.pause(); // Arrêter la musique de fond
     winnerMessage.textContent = "Le temps est écoulé ! Game Over.";
     winnerMessage.style.display = 'block';
     winnerMessage.classList.add('time-up-animation');
@@ -364,6 +478,20 @@ window.addEventListener('resize', () => {
     adjustGameContainerHeight();
     adjustCardSize(rows, cols);
 });
+
+// Ajout d'une fonction pour contrôler le volume des sons (optionnel)
+function setSoundVolume(volume) {
+    // Volume doit être entre 0 et 1
+    flipSound.volume = volume;
+    matchSound.volume = volume;
+    mismatchSound.volume = volume;
+}
+
+// Ajouter une fonction pour contrôler le volume de la musique de fond
+function setBackgroundMusicVolume(volume) {
+    // Volume doit être entre 0 et 1
+    backgroundMusic.volume = volume;
+}
 
 // Initialiser le joueur actif
 toggleActivePlayer();

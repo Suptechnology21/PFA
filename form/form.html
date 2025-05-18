@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form Memory Game | CASPER</title>
+    <link rel="stylesheet" href="form.css">
+   
+</head>
+<body>
+    <!-- Titre du Memory Game -->
+    <div class="game-title">
+        <span>M</span>
+        <span>E</span>
+        <span>M</span>
+        <span>O</span>
+        <span>R</span>
+        <span>Y</span>
+        <span class="space"></span>
+        <span>G</span>
+        <span>A</span>
+        <span>M</span>
+        <span>E</span>
+    </div>
+    
+    <!-- Éléments d'arrière-plan -->
+    <div class="glowing-light"></div>
+    <div class="glowing-light"></div>
+    <div class="glowing-light"></div>
+    <div class="glowing-light"></div>
+    <div class="glowing-light"></div>
+    
+    <!-- Particules flottantes -->
+    <div class="particle" style="top: 20%; left: 30%;"></div>
+    <div class="particle" style="top: 40%; left: 70%;"></div>
+    <div class="particle" style="top: 60%; left: 20%;"></div>
+    <div class="particle" style="top: 30%; left: 80%;"></div>
+    <div class="particle" style="top: 70%; left: 40%;"></div>
+    <div class="particle" style="top: 10%; left: 60%;"></div>
+    <div class="particle" style="top: 50%; left: 10%;"></div>
+    <div class="particle" style="top: 80%; left: 50%;"></div>
+    
+    <!-- Cartes de memory game flottantes -->
+    <div class="memory-cards">
+        <div class="memory-card">♠</div>
+        <div class="memory-card">♣</div>
+        <div class="memory-card">♥</div>
+        <div class="memory-card">♦</div>
+        <div class="memory-card">★</div>
+        <div class="memory-card">✿</div>
+    </div>
+    
+    <!-- Boîte de login -->
+    <div class="login-box">
+        <form action="#" id="login-form">
+            <!-- Interrupteur ON/OFF -->
+            <input type="checkbox" class="input-check" id="input-check">
+            <label for="input-check" class="toggle">
+                <span class="text off">off</span>
+                <span class="text on">on</span>
+            </label>
+            <div class="light"></div>
+            
+            <!-- Titre du formulaire (dynamique) -->
+            <h2 id="form-title">Login</h2>
+            
+            <!-- Champ email -->
+            <div class="input-box">
+                <span class="icon">
+                    <ion-icon name="mail"></ion-icon>
+                </span>
+                <input id="email" type="email" required>
+                <label>Email</label>
+                <div class="input-line"></div>
+            </div>
+            
+            <!-- Champ mot de passe -->
+            <div class="input-box">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" required id="password">
+                <label>Password</label>
+                <div class="input-line"></div>
+            </div>
+            <!--
+            <div id="confirm-box" class="input-box" style="display: none;">
+                <span class="icon">
+                    <ion-icon name="lock-closed"></ion-icon>
+                </span>
+                <input type="password" required id="confirm-password">
+                <label>Confirm Password</label>
+                <div class="input-line"></div>
+            </div>
+            -->
+            <!-- Champ confirmation mot de passe (caché par défaut) -->
+            
+            <!-- Options se souvenir / mot de passe oublié -->
+            <div class="remember-forgot">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="#">Forgot Password?</a>
+            </div>
+            
+            <!-- Bouton de soumission -->
+            <button type="submit" id="submit-button">Login</button>
+            
+            <!-- Lien pour basculer entre connexion et inscription -->
+            <div class="register-link">
+                <p id="toggle-register">Don't have an account? <a href="#">Register</a></p>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="form.js"></script>
+</body>
+</html>
